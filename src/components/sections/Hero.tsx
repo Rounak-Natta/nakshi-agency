@@ -79,12 +79,36 @@ export default function Hero() {
       className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 text-center gap-16 bg-[var(--background)] text-[var(--foreground)]"
     >
       {/* 🧊 CLEAN BACKGROUND IMAGE (NO BLUR, NO SHADOW) */}
-      <img
-        ref={bgRef}
-        src="/images/mainelement.png"
-        alt=""
-        className="absolute top-24 left-1/2 -translate-x-1/2 w-[1000px] max-w-none pointer-events-none select-none z-[1]"
-      />
+      <div
+  ref={bgRef}
+  className="absolute top-24 left-1/2 -translate-x-1/2 w-[1000px] max-w-none z-[1]"
+>
+  {/* BASE */}
+  <img
+    src="/images/mainelement.png"
+    alt=""
+    className="w-full h-auto block"
+  />
+
+  {/* DISTORTED LAYER */}
+  <img
+    src="/images/mainelement.png"
+    alt=""
+    className="absolute inset-0 w-full h-full object-contain opacity-60 distort-layer"
+  />
+
+  {/* HEAVY BLUR LAYER */}
+  <img
+    src="/images/mainelement.png"
+    alt=""
+    className="absolute inset-0 w-full h-full object-contain opacity-40 blur-layer"
+  />
+</div>
+<img
+  src="/images/mainelement.png"
+  alt=""
+  className="absolute inset-0 w-full h-full object-contain opacity-30 extra-blur"
+/>
 
       {/* CONTENT */}
       <div className="relative z-10 flex flex-col items-center gap-16">
