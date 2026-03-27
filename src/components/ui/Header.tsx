@@ -20,17 +20,47 @@ const menuSlide = {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   /* ===== SCROLL LOCK ===== */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
   }, [open]);
 
+  /* ===== SCROLL DETECTION ===== */
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       {/* ================= HEADER ================= */}
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 md:px-12 py-5">
-        
+    <header
+  className={`
+    fixed inset-x-0 top-0 z-50
+    flex items-center justify-between
+    px-6 md:px-12 py-5
+    transition-colors duration-300
+
+    ${
+      scrolled
+        ? "bg-black/10 backdrop-blur-sm"
+        : "bg-transparent"
+    }
+  `}
+>
+        {/* 🔊 NOISE LAYER (PREMIUM DETAIL) */}
+        {scrolled && (
+          <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('/noise.png')]" />
+        )}
+
         {/* LEFT NAV */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium tracking-[0.02em]">
           <a href="#" className="nav-link">ABOUT US</a>
