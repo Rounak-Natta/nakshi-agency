@@ -1,26 +1,119 @@
 @import "tailwindcss";
 
+/* ================= ROOT ================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ff2e2e;
+  --foreground: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ================= BASE ================= */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--background) !important;
+  color: var(--foreground) !important;
   font-family: Arial, Helvetica, sans-serif;
+}
+/* ================= NAV LINK ================= */
+
+.nav-link {
+  position: relative;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  color: var(--foreground);
+  transition: opacity 0.3s ease;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  opacity: 1;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 1px;
+  background: var(--foreground);
+  transition: width 0.4s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ================= CTA ================= */
+.cta-btn {
+  padding: 12px 30px;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    to bottom,
+    #ff6b6b,
+    #ff2e2e
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  color: white;
+  letter-spacing: 0.12em;
+
+  box-shadow:
+    inset 0 2px 6px rgba(255, 255, 255, 0.5),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.25),
+    0 10px 25px rgba(255, 0, 0, 0.4);
+
+  transition: all 0.3s ease;
+}
+.cta-btn:hover {
+  background: linear-gradient(
+    to bottom,
+    #ff7a7a 0%,
+    #ff4d4d 50%,
+    #ff2a2a 100%
+  );
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.6),
+    inset 0 -5px 12px rgba(0, 0, 0, 0.3),
+    0 12px 28px rgba(255, 0, 0, 0.5);
+}
+
+/* active = pressed */
+.cta-btn:active {
+  transform: translateY(1px);
+
+  box-shadow:
+    inset 0 3px 10px rgba(0, 0, 0, 0.4),
+    0 4px 10px rgba(255, 0, 0, 0.3);
+}
+/* ================= HAMBURGER ================= */
+
+.menu-line {
+  width: 22px;
+  height: 2px;
+  background: var(--foreground);
+  transition: all 0.3s ease;
+}
+
+/* animation states */
+.rotate-top {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.rotate-bottom {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.fade-out {
+  opacity: 0;
 }
