@@ -29,43 +29,63 @@ export default function Header() {
 
   /* ===== SCROLL DETECTION ===== */
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 20);
 
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  /* ===== SMOOTH SCROLL ===== */
+  const scrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    target: string
+  ) => {
+    e.preventDefault();
+
+    const el = document.querySelector(target);
+    if (!el) return;
+
+    // @ts-ignore (Lenis attached globally)
+    window.lenis?.scrollTo(el, {
+      offset: -80,
+      duration: 1.2,
+    });
+
+    setOpen(false);
+  };
 
   return (
     <>
       {/* ================= HEADER ================= */}
-    <header
-  className={`
-    fixed inset-x-0 top-0 z-50
-    flex items-center justify-between
-    px-6 md:px-12 py-5
-    transition-colors duration-300
-
-    ${
-      scrolled
-        ? "bg-black/10 backdrop-blur-sm"
-        : "bg-transparent"
-    }
-  `}
->
-        {/* 🔊 NOISE LAYER (PREMIUM DETAIL) */}
-        {scrolled && (
-          <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[url('/noise.png')]" />
-        )}
-
+      <header
+        className={`
+          fixed inset-x-0 top-0 z-50
+          flex items-center justify-between
+          px-6 md:px-12 py-5
+          transition-colors duration-300
+          ${scrolled ? "bg-black/10 backdrop-blur-sm" : "bg-transparent"}
+        `}
+      >
         {/* LEFT NAV */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium tracking-[0.02em]">
-          <a href="#" className="nav-link">ABOUT US</a>
+          <a
+            href="#about"
+            onClick={(e) => scrollToSection(e, "#about")}
+            className="nav-link"
+          >
+            ABOUT US
+          </a>
+
           <span className="opacity-40">|</span>
-          <a href="#" className="nav-link">WORK</a>
+
+          <a
+            href="#work"
+            onClick={(e) => scrollToSection(e, "#work")}
+            className="nav-link"
+          >
+            WORK
+          </a>
         </nav>
 
         {/* LOGO */}
@@ -82,8 +102,6 @@ export default function Header() {
 
         {/* RIGHT */}
         <div className="flex items-center gap-4">
-          
-          {/* CTA */}
           <button className="cta-btn hidden md:inline-flex tracking-[0.06em]">
             HIRE US
           </button>
@@ -93,7 +111,9 @@ export default function Header() {
             onClick={() => setOpen((prev) => !prev)}
             aria-label="Toggle menu"
             aria-expanded={open}
-            className={`md:hidden flex flex-col gap-[5px] ${open ? "menu-open" : ""}`}
+            className={`md:hidden flex flex-col gap-1.5 ${
+              open ? "menu-open" : ""
+            }`}
           >
             <span className="menu-line" />
             <span className="menu-line" />
@@ -107,15 +127,20 @@ export default function Header() {
         {open && (
           <motion.div
             {...menuSlide}
-            className="fixed inset-0 z-40 flex items-center justify-center bg-[var(--background)] text-[var(--foreground)]"
+            className="fixed inset-0 z-40 flex items-center justify-center bg--background)] text--foreground)]"
           >
             <nav className="flex flex-col items-center gap-10 text-3xl font-medium tracking-[0.02em]">
-              
-              <a href="#" onClick={() => setOpen(false)}>
+              <a
+                href="#about"
+                onClick={(e) => scrollToSection(e, "#about")}
+              >
                 ABOUT US
               </a>
 
-              <a href="#" onClick={() => setOpen(false)}>
+              <a
+                href="#work"
+                onClick={(e) => scrollToSection(e, "#work")}
+              >
                 WORK
               </a>
 
@@ -125,7 +150,6 @@ export default function Header() {
               >
                 HIRE US
               </button>
-
             </nav>
           </motion.div>
         )}

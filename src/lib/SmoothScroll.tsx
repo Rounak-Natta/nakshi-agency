@@ -14,18 +14,22 @@ export default function SmoothScroll({
       smoothWheel: true,
     });
 
+    // ✅ attach globally
+    (window as any).lenis = lenis;
+
     let rafId: number;
 
-    function raf(time: number) {
+    const raf = (time: number) => {
       lenis.raf(time);
       rafId = requestAnimationFrame(raf);
-    }
+    };
 
     rafId = requestAnimationFrame(raf);
 
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      (window as any).lenis = null;
     };
   }, []);
 
