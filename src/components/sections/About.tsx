@@ -159,15 +159,13 @@ export default function About() {
         >
           <p>
             Nakshi Agency is a bold and creative marketing partner built for brands that refuse to blend in. 
-We combine strategy, design, and data to craft impactful campaigns that don't just look good-they deliver real results.
-
- 
+            We combine strategy, design, and data to craft impactful campaigns that don't just look good-they deliver real results.
 
           </p>
 
           <p>
            From building strong brand 
-identities to driving high-performance digital growth, we help businesses stand out in a crowded world.
+            identities to driving high-performance digital growth, we help businesses stand out in a crowded world.
           </p>
         </div>
       </div>
