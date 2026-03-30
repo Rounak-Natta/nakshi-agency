@@ -190,7 +190,7 @@ identities to driving high-performance digital growth, we help businesses stand 
           >
             <div
               ref={cardRef}
-              className="relative w-60 h-60"
+              className="relative w-60 h-12"
               style={{ transformStyle: "preserve-3d" }}
             >
               {/* FRONT */}
