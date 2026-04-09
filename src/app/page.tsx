@@ -4,6 +4,7 @@ import Header from "@/components/ui/Header";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
+import OurWorks from "@/components/sections/OurWorks";
 
 /* ================= PAGE ================= */
 
@@ -30,6 +31,12 @@ export default function Home() {
         {/* Why Choose SECTION */}
         <section id="whychooseus">
           <WhyChooseUs/>
+        </section>
+
+
+
+        <section id="ourworks">
+          <OurWorks/>
         </section>
 
       </main>
