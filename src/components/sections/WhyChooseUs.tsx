@@ -8,8 +8,8 @@ const SERVICES = [
   { name: "Strategy", image: "/images/1.png" },
   { name: "Content", image: "/images/2.png" },
   { name: "Design", image: "/images/3.png" },
-  { name: "Edit & Motion", image: "/images/4.png" },
-  { name: "AV Production", image: "/images/5.png" },
+  { name: "Motion", image: "/images/4.png" },
+  { name: "Production", image: "/images/5.png" },
   { name: "Media", image: "/images/6.png" },
 ];
 

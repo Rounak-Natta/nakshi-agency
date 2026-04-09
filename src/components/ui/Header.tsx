@@ -127,8 +127,7 @@ export default function Header() {
         {open && (
           <motion.div
             {...menuSlide}
-            className="fixed inset-0 z-40 flex items-center justify-center bg--background)] text--foreground)]"
-          >
+className="fixed inset-0 z-40 flex items-center justify-center bg-[var(--background)] text-[var(--foreground)]"          >
             <nav className="flex flex-col items-center gap-10 text-3xl font-medium tracking-[0.02em]">
               <a
                 href="#about"

@@ -1,221 +1,160 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
+import { useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-/* ================= DATA ================= */
-
-const WORDS = ["STRATEGISTS", "CREATORS", "INNOVATORS", "MARKETERS"];
-
-/* ================= COMPONENT ================= */
+const WORDS = ["STRATEGISTS", "CREATORS", "INNOVATORS", "MARKETERS", "DREAMERS"];
 
 export default function About() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const boxRef = useRef<HTMLDivElement>(null);
-
   const [index, setIndex] = useState(0);
 
-  /* ================= PARALLAX ================= */
-
+  // clean word rotation
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        leftRef.current,
-        { y: -80 },
-        {
-          y: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            end: "top center",
-            scrub: true,
-          },
-        }
-      );
-
-      gsap.fromTo(
-        rightRef.current,
-        { y: 60 },
-        {
-          y: -60,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  /* ================= 3D FLIP ================= */
-
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    const tl = gsap.timeline({
-      repeat: -1,
-      repeatDelay: 1.5,
-    });
-
-    // Flip to back
-    tl.to(card, {
-      rotateX: 180,
-      duration: 0.8,
-      ease: "power3.inOut",
-    });
-
-    // Update word index midway
-    tl.add(() => {
+    const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % WORDS.length);
-    });
-
-    // Complete full rotation (back to front)
-    tl.to(card, {
-      rotateX: 360,
-      duration: 0.8,
-      ease: "power3.inOut",
-    });
-
-    return () => {
-      tl.kill(); // ✅ proper cleanup
-    };
+    }, 2400);
+    return () => clearInterval(interval);
   }, []);
 
-  /* ================= MOUSE TILT ================= */
-
-  useEffect(() => {
-    const el = boxRef.current;
-    if (!el) return;
-
-    const handleMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const rotateX = ((y / rect.height) - 0.5) * -10;
-      const rotateY = ((x / rect.width) - 0.5) * 10;
-
-      gsap.to(el, {
-        rotateX,
-        rotateY,
-        duration: 0.4,
-        ease: "power2.out",
-      });
-    };
-
-    const reset = () => {
-      gsap.to(el, {
-        rotateX: 0,
-        rotateY: 0,
-        duration: 0.6,
-        ease: "power3.out",
-      });
-    };
-
-    el.addEventListener("mousemove", handleMove);
-    el.addEventListener("mouseleave", reset);
-
-    return () => {
-      el.removeEventListener("mousemove", handleMove);
-      el.removeEventListener("mouseleave", reset);
-    };
-  }, []);
-
-  /* ================= RENDER ================= */
+  // subtle scroll motion
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.7]);
 
   return (
     <section
       id="about"
-      ref={sectionRef}
-      className="h-screen flex flex-col justify-center px-4 md:px-10 text-white overflow-hidden"
+      className="relative min-h-[140vh] px-6 md:px-16 lg:px-24 py-20 md:py-24 mt-[50px]"
+      style={{ color: "var(--foreground)" }}
     >
-      {/* GRID */}
-      <div className="grid md:grid-cols-2 gap-12 items-center">
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 -z-10 bg-[var(--background)]" />
+
+      {/* SOFT LIGHT */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-0 left-1/3 w-[400px] h-[400px] bg-white/5 blur-[100px] rounded-full" />
+        <div className="absolute bottom-0 right-1/3 w-[350px] h-[350px] bg-white/5 blur-[90px] rounded-full" />
+      </div>
+
+      {/* MAIN GRID */}
+      <div className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto">
+
         {/* LEFT */}
-        <div ref={leftRef}>
-          <p className="text-sm uppercase tracking-[0.2em] opacity-70 mb-4">
+        <motion.div
+          style={{ y, opacity }}
+          className="md:sticky md:top-28 h-fit space-y-5"
+        >
+          <p className="text-xs uppercase tracking-[0.3em] opacity-50">
             About
           </p>
 
-          <h2 className="text-2xl md:text-3xl font-semibold">
-            NAKSHI AGENCY
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
+            Nakshi Agency
           </h2>
-        </div>
+
+          <p className="text-sm opacity-50 max-w-xs">
+            Strategy. Design. Growth — crafted for brands that lead.
+          </p>
+        </motion.div>
 
         {/* RIGHT */}
-        <div
-          ref={rightRef}
-          className="space-y-6 max-w-xl text-base md:text-lg leading-relaxed"
-        >
-          <p>
-            Nakshi Agency is a bold and creative marketing partner built for brands that refuse to blend in. 
-            We combine strategy, design, and data to craft impactful campaigns that don't just look good-they deliver real results.
-
-          </p>
-
-          <p>
-           From building strong brand 
-            identities to driving high-performance digital growth, we help businesses stand out in a crowded world.
-          </p>
+        <div className="space-y-10">
+          {[
+            "Nakshi Agency partners with brands that refuse to blend in. We combine strategy, design, and data to build work that performs and lasts.",
+            "From identity systems to scalable digital growth, we create clarity, consistency, and impact across every touchpoint.",
+            "We don’t just market brands — we shape perception, influence decisions, and create meaningful connections.",
+            "Everything we do is built to earn attention, build trust, and drive long-term growth.",
+          ].map((text, i) => (
+            <motion.p
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              viewport={{ once: true }}
+              className="text-base md:text-lg leading-relaxed opacity-90"
+            >
+              {text}
+            </motion.p>
+          ))}
         </div>
       </div>
 
-      {/* CENTER */}
-      <div className="mt-20 text-center">
-        <h3 className="text-3xl md:text-6xl font-bold leading-tight">
-          We don’t follow trends — we shape them.
-        </h3>
+      {/* STATEMENT */}
+      <div className="mt-24 text-center max-w-4xl mx-auto">
+        <motion.h3
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight tracking-tight"
+        >
+          We build brands that don’t compete — they lead.
+        </motion.h3>
       </div>
 
-      {/* 3D FLIP */}
-      <div className="mt-12 flex justify-center">
-        <h4 className="text-lg md:text-3xl flex items-center gap-4">
-          <span className="opacity-80">WE ARE A MIX OF</span>
+      {/* LOWER SECTION */}
+      <div className="mt-16 max-w-5xl mx-auto flex flex-col items-center gap-8">
 
-          <div
-            ref={boxRef}
-            className="perspective-distant"
-          >
-            <div
-              ref={cardRef}
-              className="relative w-60 h-12"
-              style={{ transformStyle: "preserve-3d" }}
+        {/* ROTATING WORD */}
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 15, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="px-7 py-3 rounded-full 
+                     bg-white/10 backdrop-blur-xl 
+                     border border-white/20 
+                     text-lg md:text-2xl font-semibold shadow-sm"
+        >
+          {WORDS[index]}
+        </motion.div>
+
+        {/* VALUE CARDS */}
+        <div className="grid md:grid-cols-3 gap-4 w-full">
+
+          {[
+            {
+              title: "Strategy",
+              desc: "Clear thinking that drives every decision.",
+            },
+            {
+              title: "Design",
+              desc: "Built to be remembered, not just seen.",
+            },
+            {
+              title: "Growth",
+              desc: "Focused on impact, not vanity metrics.",
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="p-5 rounded-xl 
+                         bg-white/5 backdrop-blur-lg 
+                         border border-white/10 
+                         hover:bg-white/10 transition-all duration-300"
             >
-              {/* FRONT */}
-              <div
-                className="absolute inset-0 flex items-center justify-center rounded-xl
-                bg-white/10 backdrop-blur-md border border-white/20
-                text-white font-semibold shadow-[0_0_30px_rgba(255,255,255,0.08)]"
-                style={{ backfaceVisibility: "hidden" }}
-              >
-                {WORDS[index]}
-              </div>
+              <h4 className="font-semibold text-lg mb-1">
+                {item.title}
+              </h4>
+              <p className="text-sm opacity-70">
+                {item.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
 
-              {/* BACK */}
-              <div
-                className="absolute inset-0 flex items-center justify-center rounded-xl
-                bg-white/10 backdrop-blur-md border border-white/20
-                text-white font-semibold shadow-[0_0_30px_rgba(255,255,255,0.08)]"
-                style={{
-                  transform: "rotateX(180deg)",
-                  backfaceVisibility: "hidden",
-                }}
-              >
-                {WORDS[(index + 1) % WORDS.length]}
-              </div>
-            </div>
-          </div>
-        </h4>
+        {/* FINAL NOTE */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 0.6 }}
+          transition={{ duration: 0.8 }}
+          className="text-sm text-center max-w-md"
+        >
+          Built with intent. Designed to stand out. Engineered to grow.
+        </motion.p>
       </div>
     </section>
   );
